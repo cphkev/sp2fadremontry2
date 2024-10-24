@@ -231,6 +231,34 @@ public List<Card> getByMaxPrice(int maxPrice) {
         }
     }
 
+    public List<Card> getByMinAttack(int minAttack) {
+        try (var em = emf.createEntityManager()) {
+            String jpql = "SELECT c FROM Card c WHERE c.attack >= :minAttack";
+            return em.createQuery(jpql, Card.class)
+                    .setParameter("minAttack", minAttack)
+                    .getResultList();
+        }
+    }
+
+    public List<Card> getByMaxAttack(int maxAttack) {
+        try (var em = emf.createEntityManager()) {
+            String jpql = "SELECT c FROM Card c WHERE c.attack <= :maxAttack";
+            return em.createQuery(jpql, Card.class)
+                    .setParameter("maxAttack", maxAttack)
+                    .getResultList();
+        }
+    }
+
+    public List<Card> getByMinAndMaxAttack(int minAttack, int maxAttack) {
+        try (var em = emf.createEntityManager()) {
+            String jpql = "SELECT c FROM Card c WHERE c.attack >= :minAttack AND c.attack <= :maxAttack";
+            return em.createQuery(jpql, Card.class)
+                    .setParameter("minAttack", minAttack)
+                    .setParameter("maxAttack", maxAttack)
+                    .getResultList();
+        }
+    }
+
 
 
 }

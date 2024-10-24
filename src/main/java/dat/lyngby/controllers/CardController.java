@@ -176,4 +176,69 @@ public class CardController {
             ctx.status(HttpStatus.BAD_REQUEST).result("minPrice must be an integer.");
         }
     }
+
+    public void getByMinAttack(Context ctx) {
+        String minAttackParam = ctx.queryParam("minAttack");
+
+        if (minAttackParam == null) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("minAttack is required.");
+            return;
+        }
+        try {
+            int minAttack = Integer.parseInt(minAttackParam);
+            List<Card> cards = cardDAO.getByMinAttack(minAttack);
+
+            if (cards.isEmpty()) {
+                ctx.status(HttpStatus.NOT_FOUND).result("No cards found.");
+            } else {
+                ctx.json(CardDTO.toCardDTOList(cards));
+            }
+        } catch (NumberFormatException e) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("minAttack must be an integer.");
+        }
+    }
+
+    public void getByMaxAttack(Context ctx) {
+        String maxAttackParam = ctx.queryParam("maxAttack");
+
+        if (maxAttackParam == null) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("maxAttack is required.");
+            return;
+        }
+        try {
+            int maxAttack = Integer.parseInt(maxAttackParam);
+            List<Card> cards = cardDAO.getByMaxAttack(maxAttack);
+
+            if (cards.isEmpty()) {
+                ctx.status(HttpStatus.NOT_FOUND).result("No cards found.");
+            } else {
+                ctx.json(CardDTO.toCardDTOList(cards));
+            }
+        } catch (NumberFormatException e) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("maxAttack must be an integer.");
+        }
+    }
+
+    public void getByMinAndMaxAttack(Context ctx) {
+        String minAttackParam = ctx.queryParam("minAttack");
+        String maxAttackParam = ctx.queryParam("maxAttack");
+
+        if (minAttackParam == null || maxAttackParam == null) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("minAttack and maxAttack are required.");
+            return;
+        }
+        try {
+            int minAttack = Integer.parseInt(minAttackParam);
+            int maxAttack = Integer.parseInt(maxAttackParam);
+            List<Card> cards = cardDAO.getByMinAndMaxAttack(minAttack, maxAttack);
+
+            if (cards.isEmpty()) {
+                ctx.status(HttpStatus.NOT_FOUND).result("No cards found.");
+            } else {
+                ctx.json(CardDTO.toCardDTOList(cards));
+            }
+        } catch (NumberFormatException e) {
+            ctx.status(HttpStatus.BAD_REQUEST).result("minAttack and maxAttack must be integers.");
+        }
+    }
 }
