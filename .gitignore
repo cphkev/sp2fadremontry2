@@ -12,6 +12,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+config.properties
 # AWS User-specific
 .idea/**/aws.xml
 
