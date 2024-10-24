@@ -28,6 +28,15 @@ public class CardRoutes {
             get("/{id}", cardController::getCardById, Role.ANYONE);
             put("/{id}", cardController::updateCard, Role.ADMIN);
             delete("/{id}", cardController::deleteCard, Role.ADMIN);
+
+            get("/price/range", cardController::getByMinAndMaxPrice, Role.ANYONE);
+            get("/price/max", cardController::getByMaxPrice, Role.ANYONE);
+            get("/price/min", cardController::getByMinPrice, Role.ANYONE);
+
+            get("/attack/range", cardController::getByMinAndMaxAttack, Role.ANYONE);
+            get("/attack/max", cardController::getByMaxAttack, Role.ANYONE);
+            get("/attack/min", cardController::getByMinAttack, Role.ANYONE);
+
         };
     }
 
