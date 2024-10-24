@@ -11,7 +11,7 @@ COPY target/app.jar /app.jar
 EXPOSE 7070
 
 # Command to run your app
-CMD ["java", "-jar", "/app.jar","lyngby.dat.Main"]
+CMD ["java", "-jar", "/app.jar","dat.lyngby.Main"]
 
 
 
