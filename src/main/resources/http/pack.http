@@ -1,0 +1,42 @@
+### A simple get request to the test endpoint. No need for login
+GET {{URL}}/auth/test
+
+### Create a new user - this one will only get a USER role by default
+POST {{URL}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "test123",
+  "roles": [
+    {
+      "role": "USER"
+    }
+  ]
+}
+
+###
+POST {{URL}}/auth/login
+content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+> {% client.global.set("jwt_token", response.body.token); %}
+
+###
+GET {{URL}}/packs
+Content-Type: application/json
+###
+POST {{URL}}/packs
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": "Test Pack",
+  "price": 200,
+  "description": "Test Description",
+  "cards": [{}]
+}
+###

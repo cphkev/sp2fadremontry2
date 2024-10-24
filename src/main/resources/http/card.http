@@ -1,0 +1,66 @@
+GET {{URL}}/auth/test
+
+###
+POST {{URL}}/auth/register
+
+{
+"username": "user",
+"password": "test123"
+
+}
+
+###
+
+POST {{URL}}/auth/login
+
+{
+
+"username": "admin",
+"password": "admin123"
+
+}
+
+> {% client.global.set("jwt_token", response.body.token); %}
+
+###
+GET {{URL}}/cards/getallcards
+//Get all cards
+
+###
+
+POST {{URL}}/cards/create
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+//Create a card
+
+{
+
+"cardName": "Gulle",
+  "description": "Gulle er en god gutt",
+  "rarity": "Common",
+  "price" : 50,
+  "isShiny" : false,
+   "attack" : 10,
+    "defense" : 10,
+  "chance" : 50,
+  "aura" : 100,
+  "evolutionStage" : 1,
+  "packs" : [{}],
+  "inventory" : {}
+
+}
+
+###
+
+GET {{URL}}/cards/1
+//Get card by id
+
+###
+
+DELETE {{URL}}/cards/3
+Authorization: Bearer {{jwt_token}}
+//Delete card by id
+
+###
+
