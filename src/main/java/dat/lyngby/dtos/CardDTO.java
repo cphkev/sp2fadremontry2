@@ -8,8 +8,10 @@ import dat.lyngby.entities.Pack;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class CardDTO {
     private String description;
     private int aura;
     private int evolutionStage;
-    private Set<Pack> packs;
+    private Set<Pack> packs = new HashSet<>();
     private Inventory inventory;
 
     public CardDTO(Card card) {
@@ -40,6 +42,7 @@ public class CardDTO {
         this.chance = card.getChance();
         this.description = card.getDescription();
         this.aura = card.getAura();
+        this.packs = card.getPacks().stream().map(Pack::new).collect(Collectors.toSet());
         this.evolutionStage = card.getEvolutionStage();
     }
 
@@ -50,7 +53,7 @@ public class CardDTO {
 
 
     public Card toEntity() {
-        return new Card(
+        Card card = new Card(
                 this.cardName,
                 this.description,
                 this.rarity,
@@ -64,6 +67,7 @@ public class CardDTO {
                 this.packs,
                 this.inventory
         );
+        return card;
     }
 
 

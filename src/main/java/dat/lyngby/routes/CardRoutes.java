@@ -23,11 +23,11 @@ public class CardRoutes {
     protected EndpointGroup getRoutes(){
         return () -> {
             before(securityController.authenticate());
-            post("/create", cardController::createCard, Role.ADMIN);
+            post("/create", cardController::createCard, Role.ANYONE);
             get("/getallcards", cardController::getAllCards,Role.ANYONE);
             get("/{id}", cardController::getCardById, Role.ANYONE);
             put("/{id}", cardController::updateCard, Role.ADMIN);
-            delete("/{id}", cardController::deleteCard, Role.ADMIN);
+            delete("/{id}", cardController::deleteCard, Role.ADMIN);//OBS VIRKER IKKE!!!!
 
             get("/price/range", cardController::getByMinAndMaxPrice, Role.ANYONE);
             get("/price/max", cardController::getByMaxPrice, Role.ANYONE);
@@ -36,6 +36,12 @@ public class CardRoutes {
             get("/attack/range", cardController::getByMinAndMaxAttack, Role.ANYONE);
             get("/attack/max", cardController::getByMaxAttack, Role.ANYONE);
             get("/attack/min", cardController::getByMinAttack, Role.ANYONE);
+
+            get("defence/range", cardController::getByMinAndMaxDefence, Role.ANYONE);
+            get("defence/max", cardController::getByMaxDefence, Role.ANYONE);
+            get("defence/min", cardController::getByMinDefence, Role.ANYONE);
+
+            put("/addcardtopack/{cardId}/{packId}", cardController::addCardToPack, Role.ANYONE);
 
         };
     }

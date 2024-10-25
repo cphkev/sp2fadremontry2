@@ -2,10 +2,11 @@ GET {{URL}}/auth/test
 
 ###
 POST {{URL}}/auth/register
+Content-Type: application/json
 
 {
-"username": "user",
-"password": "test123"
+"username": "admin",
+"password": "admin123"
 
 }
 
@@ -36,13 +37,13 @@ Authorization: Bearer {{jwt_token}}
 
 {
 
-"cardName": "Gulle",
-  "description": "Gulle er en god gutt",
+"cardName": "TEST60ATT",
+  "description": "TEST TEST TEST",
   "rarity": "Common",
-  "price" : 50,
+  "price" : 10,
   "isShiny" : false,
-   "attack" : 10,
-    "defense" : 10,
+   "attack" : 60,
+    "defense" : 50,
   "chance" : 50,
   "aura" : 100,
   "evolutionStage" : 1,
@@ -61,6 +62,84 @@ GET {{URL}}/cards/1
 DELETE {{URL}}/cards/3
 Authorization: Bearer {{jwt_token}}
 //Delete card by id
+//Virker ikke desværre
+###
+
+PUT {{URL}}/cards/4
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+//Update card by id
+
+{
+
+  "cardName": "Gulle",
+  "description": "Gulle er en god gutt",
+  "rarity": "Common",
+  "price" : 10,
+  "isShiny" : false,
+  "attack" : 10,
+  "defense" : 10,
+  "chance" : 50,
+  "aura" : 100,
+  "evolutionStage" : 1,
+  "packs" : [{}],
+  "inventory" : {}
+
+}
+
+###
+
+GET {{URL}}/cards/price/range?minPrice=10&maxPrice=50
+Authorization: Bearer {{jwt_token}}
+//Virker med scuffed løsning til hashcode
+
+###
+
+GET {{URL}}/cards/price/max?maxPrice=50
+Authorization: Bearer {{jwt_token}}
+//Virker med scuffed løsning til hashcode
+
+###
+
+GET {{URL}}/cards/price/min?minPrice=10
+Authorization: Bearer {{jwt_token}}
+
+###
+
+GET {{URL}}/cards/attack/range?minAttack=10&maxAttack=50
+Authorization: Bearer {{jwt_token}}
+
+###
+
+GET {{URL}}/cards/attack/max?maxAttack=50
+Authorization: Bearer {{jwt_token}}
+
+###
+
+GET {{URL}}/cards/attack/min?minAttack=10
+Authorization: Bearer {{jwt_token}}
+
+###
+GET {{URL}}/cards/defence/range?minDefence=10&maxDefence=50
+Authorization: Bearer {{jwt_token}}
+
+###
+
+GET {{URL}}/cards/defence/max?maxDefence=50
+Authorization: Bearer {{jwt_token}}
+
+###
+
+GET {{URL}}/cards/defence/min?minDefence=10
+Authorization: Bearer {{jwt_token}}
+
+###
+
+PUT {{URL}}/cards/addcardtopack/1/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
 
 ###
 
