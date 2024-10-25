@@ -27,9 +27,14 @@ content-Type: application/json
 > {% client.global.set("jwt_token", response.body.token); %}
 
 ###
-GET {{URL}}/packs
+GET {{URL}}/packs/getpacks
 Content-Type: application/json
 ###
+
+GET {{URL}}/packs/1
+Content-Type: application/json
+###
+
 POST {{URL}}/packs/create
 Content-Type: application/json
 Authorization: Bearer {{jwt_token}}
@@ -39,4 +44,25 @@ Authorization: Bearer {{jwt_token}}
   "description": "Test Description",
   "cards": [{}]
 }
+
 ###
+
+PUT {{URL}}/packs/update/1
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": "Test Pack Updated",
+  "description": "Test Description",
+  "cards": [{}]
+}
+###
+
+DELETE {{URL}}/packs/delete/1
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+###
+
+
+
