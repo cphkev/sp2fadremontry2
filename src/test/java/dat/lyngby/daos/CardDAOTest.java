@@ -25,7 +25,7 @@ class CardDAOTest {
     private static Inventory testInventory;
     private static Set<Card> testCards;
     private static Set<Pack> testPacks;
-/*
+
     @BeforeAll
     void setUp() {
         emf = HibernateConfig.getEntityManagerFactoryForTest();
@@ -106,7 +106,7 @@ class CardDAOTest {
             assertEquals("UpdatedCard", updatedCard.getCardName());
         }
     }
-/*
+
     @Test
     void delete() {
         cardDAO.delete(1);
@@ -147,6 +147,6 @@ class CardDAOTest {
         assertTrue(cards.stream().allMatch(card -> card.getPrice() >= 10 && card.getPrice() <= 50));
     }
 
-*/
+
 
 }
