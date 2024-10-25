@@ -26,10 +26,10 @@ public class PackRoutes {
 
     public EndpointGroup getRoutes() {
         return () -> {
-
+            before(securityController.authenticate()); // check if there is a valid token in the header
             get("/", packController::getAllPacks, Role.ANYONE);
             get("/{id}", packController::getPackById, Role.ANYONE);
-            before(securityController.authenticate()); // check if there is a valid token in the header
+
             post("/", packController::createPack, Role.ADMIN);
             put("/{id}", packController::updatePack, Role.ADMIN);
             delete("/{id}", packController::deletePack, Role.ADMIN);
