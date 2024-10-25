@@ -55,67 +55,6 @@ public class CardDAO implements IDAO<CardDTO, Integer> {
             return new CardDTO(card);
         }
     }
-//    public CardDTO create(CardDTO cardDTO) {
-//        try (EntityManager em = emf.createEntityManager()) {
-//            em.getTransaction().begin();
-//            Card card = new Card(cardDTO);
-////            if (card.isShiny()&&card.getRarity().equals("Common")){
-////                card.setChance(0.3);
-////            } else if (card.isShiny()&&card.getRarity().equals("Rare")) {
-////                card.setChance(0.2);
-////            } else if (card.isShiny()&&card.getRarity().equals("Legendary")){
-////                card.setChance(0.01);
-////            } else if (card.isShiny() == false && card.getRarity().equals("Common")){
-////                card.setChance(0.7);
-////            } else if (card.isShiny() == false && card.getRarity().equals("Rare")){
-////                card.setChance(0.4);
-////            } else if (card.isShiny() == false && card.getRarity().equals("Legendary")){
-////                card.setChance(0.1);
-////            }
-//            em.persist(card);
-//            em.getTransaction().commit();
-//            return new CardDTO(card);
-//        }
-//
-//    }
-
-//    @Override
-//    public CardDTO create(CardDTO cardDTO) {
-//        try (EntityManager em = emf.createEntityManager()) {
-//            em.getTransaction().begin();
-//
-//            Card card = new Card(cardDTO);
-//
-//            // Set the chance based on rarity and shiny status
-//            String key = card.getRarity() + "_" + card.isShiny();
-//            Integer chance = getChance(key);
-//
-//
-//            if (chance != null) {
-//                card.setChance(chance);
-//            } else {
-//                // Handle unexpected rarity/shiny combination if necessary
-//                throw new IllegalArgumentException("Invalid rarity/shiny combination");
-//            }
-//            em.persist(card);
-//            em.getTransaction().commit();
-//            return new CardDTO(card);
-//        }
-//    }
-//
-//
-//    private Integer getChance(String key) {
-//        Map<String, Integer> chanceMap = new HashMap<>();
-//        chanceMap.put("Common_False", 70); // 70% chance for non-shiny Common
-//        chanceMap.put("Common_True", 30);  // 30% chance for shiny Common
-//        chanceMap.put("Rare_False", 20);   // 20% chance for non-shiny Rare
-//        chanceMap.put("Rare_True", 10);    // 10% chance for shiny Rare
-//        chanceMap.put("Legendary_False", 5); // 5% chance for non-shiny Legendary
-//        chanceMap.put("Legendary_True", 1); // 1% chance for shiny Legendary
-//
-//        return chanceMap.get(key);
-//    }
-
 
     @Override
     public CardDTO getById(int id) {
@@ -147,22 +86,66 @@ public class CardDAO implements IDAO<CardDTO, Integer> {
 
     }
 
+//    @Override
+//    public void delete(int id) {
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            Card card = em.find(Card.class, id);
+//            if (card != null){
+//                card.getPacks().forEach(pack -> pack.getCards().remove(card));
+//                em.remove(card);
+//            }
+//            em.getTransaction().commit();
+//        } finally {
+//            emf.close();
+//        }
+//
+//    }
+
+//    @Override
+//    public void delete(int id) {
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            Card card = em.find(Card.class, id);
+//            if (card != null) {
+//                // Remove the card from all associated packs
+//                for (Pack pack : card.getPacks()) {
+//                    pack.removeCard(card);
+//                    em.merge(pack); // Update the Pack entity to reflect the changes
+//                }
+//                em.remove(card);
+//            }
+////                // Remove the card from the inventory if it exists
+////                if (card.getInventory() != null) {
+////                    card.getInventory().getCards().remove(card);
+////                    em.merge(card.getInventory()); // Update the Inventory entity to reflect the changes
+////                }
+////                em.remove(card);
+////            }
+//            em.getTransaction().commit();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new RuntimeException("Failed to delete card with id:" + id, e);
+//        }
+//    }
+
     @Override
     public void delete(int id) {
-        try (var em = emf.createEntityManager()) {
+        try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Card card = em.find(Card.class, id);
-            if (card != null){
-                card.getPacks().forEach(pack -> pack.getCards().remove(card));
+            if (card != null) {
+                em.remove(card);
+                for (Pack pack:card.getPacks()) {
+                    pack.removeCard(card);
+                    em.merge(pack);
+
+                }
                 em.remove(card);
             }
             em.getTransaction().commit();
-        } finally {
-            emf.close();
         }
-
     }
-
     @Override
     public List<CardDTO> getAll() {
         try (var em = emf.createEntityManager()) {
@@ -175,7 +158,7 @@ public class CardDAO implements IDAO<CardDTO, Integer> {
     public PackDTO addCardToPack(int packId, CardDTO cardDTO) {
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            Card card = new Card(cardDTO);
+            Card card = em.merge( new Card(cardDTO));
             Pack pack = em.find(Pack.class, packId);
             pack.addCard(card);
             em.persist(card);
@@ -223,13 +206,31 @@ public List<Card> getByMaxPrice(int maxPrice) {
 
     public List<Card> getByMinAndMaxPrice(int minPrice, int maxPrice) {
         try (var em = emf.createEntityManager()) {
+            System.out.println("==================================");
+            System.out.println("Creating query for cards between price " + minPrice + " and " + maxPrice);
+            System.out.println("==================================");
             String jpql = "SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice";
-            return em.createQuery(jpql, Card.class)
-                    .setParameter("minPrice", minPrice)
-                    .setParameter("maxPrice", maxPrice)
-                    .getResultList();
+            List<Card> cards = null;
+            try {
+               cards = em.createQuery(jpql, Card.class)
+                        .setParameter("minPrice", minPrice)
+                        .setParameter("maxPrice", maxPrice)
+                        .getResultList();
+                System.out.println("==================================");
+                System.out.println("Query executed successfully, number of cards found: " + cards.size());
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error getting cards between price " + minPrice + " and " + maxPrice, e);
+            }
+            System.out.println("Cards found between price " + minPrice + " and " + maxPrice + ":");
+            for (Card card : cards) {
+                System.out.println("Card ID: " + card.getId() + ", Name: " + card.getCardName() + ", Price: " + card.getPrice());
+            }
+
+            return cards;
         }
-    }
+        }
+
 
     public List<Card> getByMinAttack(int minAttack) {
         try (var em = emf.createEntityManager()) {
@@ -261,4 +262,62 @@ public List<Card> getByMaxPrice(int maxPrice) {
 
 
 
+
+//    public void deleteCardFromPack(int packId, int cardId) {
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            Pack pack = em.find(Pack.class, packId);
+//            Card card = em.find(Card.class, cardId);
+//            System.out.println("==================================");
+//            System.out.println("Pack: " + pack);
+//            System.out.println("Card: " + card);
+//            if (pack != null && card != null) {
+//                pack.removeCard(card);
+//                em.merge(pack);
+//                em.getTransaction().commit();
+//            } else {
+//                em.getTransaction().rollback();
+//                throw new RuntimeException("Pack or Card not found");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Error deleting card from pack", e);
+//        }
+
+
+public void deleteCardFromPack(int packId, int cardId) {
+    try (var em = emf.createEntityManager()) {
+        em.getTransaction().begin();
+        Pack pack = em.find(Pack.class, packId);
+        Card card = em.find(Card.class, cardId);
+        if (pack != null && card != null) {
+            pack.removeCard(card);
+            em.merge(pack);
+        }
+        em.getTransaction().commit();
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Error deleting card from pack", e);
+    }
+}
+
+
+    public void deleteCardFromInventory(int inventoryId, int cardId) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            Inventory inventory = em.find(Inventory.class, inventoryId);
+            Card card = em.find(Card.class, cardId);
+            if (inventory != null && card != null) {
+                inventory.getCards().remove(card);
+                em.merge(inventory);
+                em.getTransaction().commit();
+            } else {
+                em.getTransaction().rollback();
+                throw new RuntimeException("Inventory or Card not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting card from inventory", e);
+        }
+    }
 }

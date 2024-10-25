@@ -30,7 +30,7 @@ public class PackRoutes {
             get("/", packController::getAllPacks, Role.ANYONE);
             get("/{id}", packController::getPackById, Role.ANYONE);
 
-            post("/", packController::createPack, Role.ADMIN);
+            post("/create", packController::createPack, Role.ADMIN);
             put("/{id}", packController::updatePack, Role.ADMIN);
             delete("/{id}", packController::deletePack, Role.ADMIN);
         };

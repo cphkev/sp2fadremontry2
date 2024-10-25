@@ -59,7 +59,7 @@ public class SecurityDAO implements ISecurityDAO {
             if (username.equals("admin")) {
                 // Check if admin role exists, if not create it
                 if (adminRole == null) {
-                    adminRole = new Role("admin");
+                    adminRole = new Role("ADMIN");
                     em.persist(adminRole);
                 }
                 userEntity.addRole(adminRole);

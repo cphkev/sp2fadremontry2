@@ -44,10 +44,17 @@ public class PackController {
                 ctx.json(new Message(400, "PackDTO is required."));
                 return;
             }
+            Pack pack = packDTO.toEntity();
+            PackDTO newPack = packDAO.create(packDTO);
 
-            PackDTO createdCard = packDAO.create(packDTO);
+            if (newPack == null){
+                ctx.status(400);
+                ctx.json(new Message(400, "Invalid pack"));
+                return;
+            }
+
             ctx.res().setStatus(201);
-            ctx.json(packDTO, PackDTO.class);
+            ctx.json(newPack);
         }catch (Exception e){
             log.error("400 {}", e.getMessage());
             throw new ApiException(400, e.getMessage());
