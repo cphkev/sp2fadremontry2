@@ -1,9 +1,12 @@
 package dat.lyngby.controllers;
 
 import dat.lyngby.daos.CardDAO;
+import dat.lyngby.daos.PackDAO;
 import dat.lyngby.dtos.CardDTO;
+import dat.lyngby.dtos.PackDTO;
 import dat.lyngby.entities.Card;
 import dat.lyngby.entities.Message;
+import dat.lyngby.entities.Pack;
 import dat.lyngby.security.exceptions.ApiException;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -14,6 +17,8 @@ import java.util.List;
 
 public class CardController {
     private final CardDAO cardDAO;
+    private final PackDAO packDAO = new PackDAO();
+    private PackDTO packDTO = new PackDTO();
     private final Logger log = LoggerFactory.getLogger(CardController.class);
 
     public CardController(CardDAO cardDAO) {
@@ -29,7 +34,7 @@ public class CardController {
                 ctx.json(new Message(400, "Invalid request"));
                 return;
             }
-//            Card card = cardDTO.toEntity();
+          Card card = cardDTO.toEntity();
             CardDTO newCard = cardDAO.create(cardDTO);
 
             if (newCard == null) {
@@ -88,26 +93,48 @@ public class CardController {
 
     }
 
-    public void deleteCard(Context ctx){
+
+
+    public void deleteCard(Context ctx) {
         int id = Integer.parseInt(ctx.pathParam("id"));
+        System.out.println("The Card to delete with id: " + id);
 
         CardDTO cardDTO = cardDAO.getById(id);
+        System.out.println("Retrieved cardDTO: " + cardDTO);
 
-
-        if (cardDTO == null){
+        if (cardDTO == null) {
             ctx.status(404);
             ctx.json(new Message(404, "Card not found"), CardDTO.class);
             return;
         }
+        System.out.println("===============================");
+        System.out.println("THE PACK THAT WE DELETE FROM: " + cardDTO.getPacks());
+        System.out.println("===============================");
         try {
+
+
+            if (cardDTO.getPacks() != null) {
+                for (Pack pack : cardDTO.getPacks()) {
+                    System.out.println("Deleting card from pack: " + pack.getId());
+                    cardDAO.deleteCardFromPack(pack.getId(), id);
+                }
+            }
+
+
+            if (cardDTO.getInventory() != null) {
+                System.out.println("Deleting card from inventory: " + cardDTO.getInventory().getId());
+                cardDAO.deleteCardFromInventory(cardDTO.getInventory().getId(), id);
+            }
+
+
+            System.out.println("Deleting card with id: " + id);
             cardDAO.delete(id);
             ctx.status(204);
-        }catch (Exception e){
+        } catch (Exception e) {
+            log.error("500 {}", e.getMessage());
             ctx.status(500);
             ctx.json(new Message(500, "Internal server error"), CardDTO.class);
         }
-
-
     }
 
 
@@ -241,4 +268,22 @@ public class CardController {
             ctx.status(HttpStatus.BAD_REQUEST).result("minAttack and maxAttack must be integers.");
         }
     }
+
+    public void addCardToPack(Context ctx) {
+        int cardId = Integer.parseInt(ctx.pathParam("cardId"));
+        int packId = Integer.parseInt(ctx.pathParam("packId"));
+
+        CardDTO cardDTO = cardDAO.getById(cardId);
+        PackDTO packDTO = packDAO.getById(packId);
+
+        if (cardDTO == null || packDTO == null) {
+            ctx.status(404);
+            ctx.json(new Message(404, "Card or pack not found"), CardDTO.class);
+            return;
+        }
+        cardDAO.addCardToPack(packId,cardDTO);
+        ctx.status(201);
+        ctx.json(new Message(201, "Card added to pack"), CardDTO.class);
+    }
+
 }

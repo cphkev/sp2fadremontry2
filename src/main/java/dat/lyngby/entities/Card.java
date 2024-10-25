@@ -4,17 +4,22 @@ package dat.lyngby.entities;
 import dat.lyngby.dtos.CardDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
 @Entity
 @NoArgsConstructor
 @Table(name = "cards")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)//Mega scuffed løsning
 public class Card {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include//Mega scuffed løsning
     private int id;
 
     private String cardName;
@@ -29,7 +34,8 @@ public class Card {
     private int evolutionStage;
 
     @ManyToMany(mappedBy = "cards",fetch = FetchType.EAGER)
-    private Set<Pack> packs;
+    @EqualsAndHashCode.Exclude//Mega scuffed løsning
+    private Set<Pack> packs = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "inventory_cards",
@@ -37,7 +43,7 @@ public class Card {
             inverseJoinColumns = @JoinColumn(name = "inventory_id"))
     private Inventory inventory;
 
-    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int chance, int aura, int evolutionStage, Set<Pack> pack, Inventory inventory) {
+    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int chance, int aura, int evolutionStage, Set<Pack> pack,Inventory inventory) {
         this.cardName = cardName;
         this.description = description;
         this.rarity = rarity;
@@ -52,7 +58,7 @@ public class Card {
         this.inventory = inventory;
     }
 
-    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int aura, int evolutionStage, Set<Pack> pack, Inventory inventory) {
+    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int aura, int evolutionStage, Set<Pack> pack) {
         this.cardName = cardName;
         this.description = description;
         this.rarity = rarity;
@@ -63,7 +69,7 @@ public class Card {
         this.aura = aura;
         this.evolutionStage = evolutionStage;
         this.packs = pack;
-        this.inventory = inventory;
+       // this.inventory = inventory;
     }
 
     public Card(CardDTO cardDTO) {
@@ -79,4 +85,7 @@ public class Card {
         this.aura = cardDTO.getAura();
         this.evolutionStage = cardDTO.getEvolutionStage();
     }
+
+
+
 }

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -18,6 +21,9 @@ public class Inventory {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "username")
     private User user;
+
+    @OneToMany(mappedBy = "inventory", fetch = FetchType.EAGER)
+    private Set<Card> cards = new HashSet<>();
 
     public Inventory(User user) {
         this.user = user;
