@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +40,19 @@ public class PackDAO implements IDAO<PackDTO,Integer> {
     public PackDTO create(PackDTO packDTO) {
         try(EntityManager em = emf.createEntityManager()){
             em.getTransaction().begin();
+
+            Set<Card> cards = packDTO.getCards();
+            if(cards != null) {
+                for (Card card : cards) {
+                    if (card.getId() == 0) {
+                        em.persist(card);
+                    } else {
+                        em.merge(card);
+
+                    }
+                }
+            }
+
             Pack pack = packDTO.toEntity();
             em.persist(pack);
             em.getTransaction().commit();

@@ -1,6 +1,7 @@
 package dat.lyngby.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dat.lyngby.dtos.CardDTO;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class Card {
 
     @ManyToMany(mappedBy = "cards",fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude//Mega scuffed løsning
+    @JsonIgnore
     private Set<Pack> packs = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
