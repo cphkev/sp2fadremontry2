@@ -33,7 +33,7 @@ class PackDAOTest {
     private static Set<Card> testCards;
     private static Set<Pack> testPacks;
     private static Set<Card> allCardsTestPack;
-/*
+
     @BeforeAll
     void setUp() {
       emf =  HibernateConfig.getEntityManagerFactoryForTest();
@@ -108,7 +108,7 @@ class PackDAOTest {
         packDAO.update(1, actual);
         assertEquals("updatedPack", packDAO.getById(1).getName());
     }
-/*
+
     @Test
     void delete() {
 
@@ -126,6 +126,6 @@ class PackDAOTest {
         List<PackDTO> actual = packDAO.getAll();
         assertEquals(1, actual.size());
     }
-    */
+
 
 }

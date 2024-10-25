@@ -74,6 +74,20 @@ public class Card {
        // this.inventory = inventory;
     }
 
+
+    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int chance, int aura, int evolutionStage) {
+        this.cardName = cardName;
+        this.description = description;
+        this.rarity = rarity;
+        this.price = price;
+        this.isShiny = isShiny;
+        this.attack = attack;
+        this.defense = defense;
+        this.chance = chance;
+        this.aura = aura;
+        this.evolutionStage = evolutionStage;
+    }
+
     public Card(CardDTO cardDTO) {
         this.id = cardDTO.getId();
         this.cardName = cardDTO.getCardName();
@@ -86,6 +100,28 @@ public class Card {
       this.chance = cardDTO.getChance();
         this.aura = cardDTO.getAura();
         this.evolutionStage = cardDTO.getEvolutionStage();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return price == card.price &&
+                isShiny == card.isShiny &&
+                attack == card.attack &&
+                defense == card.defense &&
+                chance == card.chance &&
+                aura == card.aura &&
+                evolutionStage == card.evolutionStage &&
+                Objects.equals(cardName, card.cardName) &&
+                Objects.equals(description, card.description) &&
+                Objects.equals(rarity, card.rarity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cardName, description, rarity, price, isShiny, attack, defense, chance, aura, evolutionStage);
     }
 
 
