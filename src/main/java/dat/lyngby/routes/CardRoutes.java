@@ -37,6 +37,10 @@ public class CardRoutes {
             get("/attack/max", cardController::getByMaxAttack, Role.ANYONE);
             get("/attack/min", cardController::getByMinAttack, Role.ANYONE);
 
+            get("defence/range", cardController::getByMinAndMaxDefence, Role.ANYONE);
+            get("defence/max", cardController::getByMaxDefence, Role.ANYONE);
+            get("defence/min", cardController::getByMinDefence, Role.ANYONE);
+
             put("/addcardtopack/{cardId}/{packId}", cardController::addCardToPack, Role.ANYONE);
 
         };
