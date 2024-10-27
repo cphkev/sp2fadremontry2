@@ -57,19 +57,19 @@ class CardDAOTest {
         }
     }
 
-    @AfterEach
-    void tearDownEach(){
-        try (var em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.createQuery("DELETE FROM Card").executeUpdate();
-            em.createQuery("DELETE FROM Pack").executeUpdate();
-            em.createQuery("DELETE FROM Inventory").executeUpdate();
-            em.createQuery("DELETE FROM User").executeUpdate();
-            em.getTransaction().commit();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+//    @AfterEach
+//    void tearDownEach(){
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            em.createQuery("DELETE FROM Card").executeUpdate();
+//            em.createQuery("DELETE FROM Pack").executeUpdate();
+//            em.createQuery("DELETE FROM Inventory").executeUpdate();
+//            em.createQuery("DELETE FROM User").executeUpdate();
+//            em.getTransaction().commit();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
     @AfterAll
     static void tearDown() {
