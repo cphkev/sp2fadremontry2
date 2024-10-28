@@ -21,7 +21,7 @@ public class Populate {
 //   public static Set<Pack> jonesPack;
 
 
-    public static void main(String[] args) {
+    public static void Populate() {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
         Set<Card> cards = getCards();
         Set<Card> jonesCards = getJonesCards();
@@ -70,41 +70,41 @@ public class Populate {
 
 
 
-    public static void Populate () {
-        Inventory playerInventory;
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-        User user = new User("username1", "password1");
-        User adminUser = new User("admin", "admin123");
-        Role adminRole = new Role("ADMIN");
-        adminUser.addRole(adminRole);
-
-
-        Set<Card> jonesCards = new HashSet<>();
-//        CardDAO cardDAO = new CardDAO(emf);
-
-
-        try (var em = emf.createEntityManager()) {
-            em.getTransaction().begin();
-            em.persist(adminRole);
-            em.persist(user);
-            em.persist(adminUser);
+//    public static void Populate () {
+//        Inventory playerInventory;
+//        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
+//        User user = new User("username1", "password1");
+//        User adminUser = new User("admin", "admin123");
+//        Role adminRole = new Role("ADMIN");
+//        adminUser.addRole(adminRole);
+//
+//
+//        Set<Card> jonesCards = new HashSet<>();
+////        CardDAO cardDAO = new CardDAO(emf);
+//
+//
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            em.persist(adminRole);
+//            em.persist(user);
+//            em.persist(adminUser);
+////            for (Card card : jonesCards) {
+////               em.persist(card);
+////            }
+//
+//            Pack jonesPack = new Pack("Jones Pack", "lort", jonesCards);
+//            jonesPack.setCards(jonesCards);
+//            playerInventory = new Inventory(user);
+//            em.persist(playerInventory);
 //            for (Card card : jonesCards) {
-//               em.persist(card);
+//                card.setInventory(playerInventory);
 //            }
-
-            Pack jonesPack = new Pack("Jones Pack", "lort", jonesCards);
-            jonesPack.setCards(jonesCards);
-            playerInventory = new Inventory(user);
-            em.persist(playerInventory);
-            for (Card card : jonesCards) {
-                card.setInventory(playerInventory);
-            }
-
-            em.persist(jonesPack);
-            em.getTransaction().commit();
-
-        }
-    }
+//
+//            em.persist(jonesPack);
+//            em.getTransaction().commit();
+//
+//        }
+//    }
 
 
 
